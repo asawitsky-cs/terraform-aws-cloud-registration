@@ -32,7 +32,7 @@ CrowdStrike API keys are required to use this module. It is highly recommended t
         <th>Permission</th>
     </tr>
     <tr>
-        <td rowspan="2">Automated account registration</td>
+        <td rowspan="2">Automated account registration<br>(required for all Terraform registrations)</td>
         <td>CSPM registration</td>
         <td><strong>Read</strong> and <strong>Write</strong></td>
     </tr>
@@ -85,7 +85,7 @@ terraform {
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
-      version = ">= 0.0.18"
+      version = ">= 0.0.16"
     }
   }
 }
@@ -129,10 +129,6 @@ provider "crowdstrike" {
 provider "aws" {
   region = "us-east-1"
   alias  = "us-east-1"
-}
-provider "aws" {
-  region = "us-east-2"
-  alias  = "us-east-2"
 }
 
 # Provision AWS account in Falcon.
@@ -221,7 +217,7 @@ module "fcs_account_us_east_2" {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.16 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.18 |
 ## Resources
 
 | Name | Type |
@@ -234,15 +230,15 @@ module "fcs_account_us_east_2" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
 | <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
-| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
+| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the CrowdStrike S3 bucket for CloudTrail logs. Must be obtained from CrowdStrike, only used if `use_existing_cloudtrail=true` | `string` | `""` | no |
 | <a name="input_dspm_integration_role_unique_id"></a> [dspm\_integration\_role\_unique\_id](#input\_dspm\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role | `string` | `""` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_dspm_scanner_role_unique_id"></a> [dspm\_scanner\_role\_unique\_id](#input\_dspm\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role | `string` | `""` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
-| <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
-| <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to install realtime visibility resources | `bool` | `false` | no |
+| <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install resources needed for Falcon Identity Protection (requires separate license) | `bool` | `false` | no |
+| <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to enable log ingestion and associated Real Time Visability and Detection features | `bool` | `false` | no |
 | <a name="input_enable_sensor_management"></a> [enable\_sensor\_management](#input\_enable\_sensor\_management) | Set to true to install 1Click Sensor Management resources | `bool` | n/a | yes |
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
 | <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | Eventbus ARN to send events to | `string` | `""` | no |
